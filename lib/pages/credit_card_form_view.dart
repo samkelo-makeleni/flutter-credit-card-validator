@@ -26,10 +26,19 @@ class _CreditCardFormViewState extends State<CreditCardFormView> {
     super.dispose();
   }
 
+  bool _isCountryBanned(String country, List<String> banned) {
+    return banned
+        .map((e) => e.toLowerCase())
+        .contains(country.toLowerCase());
+  }
+
   @override
   Widget build(BuildContext context) {
     final cardVM = context.watch<CreditCardViewModel>();
     final settingsVM = context.watch<SettingsViewModel>();
+
+    final countryInput = _country.text.trim();
+    final isBanned = countryInput.isNotEmpty && _isCountryBanned(countryInput, settingsVM.banned);
 
     return Card(
       child: Padding(
@@ -88,13 +97,37 @@ class _CreditCardFormViewState extends State<CreditCardFormView> {
                   ),
                   const SizedBox(width: 18),
                   Expanded(
-                    child: TextFormField(
-                      controller: _country,
-                      decoration: const InputDecoration(
-                        labelText: 'Issuing country',
-                      ),
-                      validator: (v) =>
-                          (v == null || v.isEmpty) ? 'Enter country' : null,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextFormField(
+                          controller: _country,
+                          decoration: InputDecoration(
+                            labelText: 'Issuing country',
+                            errorText: isBanned ? 'This country is banned' : null,
+                            errorStyle: const TextStyle(color: Colors.red),
+                          ),
+                          validator: (v) =>
+                              (v == null || v.isEmpty) ? 'Enter country' : null,
+                        ),
+                        if (isBanned)
+                          const Padding(
+                            padding: EdgeInsets.only(top: 4.0),
+                            child: Row(
+                              children: [
+                                Icon(Icons.warning, size: 16, color: Colors.red),
+                                SizedBox(width: 4),
+                                Text(
+                                  'Country is banned',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ],
