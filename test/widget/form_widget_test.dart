@@ -1,6 +1,6 @@
 import 'package:flutter_application_credit_card_validator/scoped_models/credit_card_viewmodel.dart' show CreditCardViewModel;
 import 'package:flutter_application_credit_card_validator/scoped_models/settings_viewmodel.dart' show SettingsViewModel;
-import 'package:flutter_application_credit_card_validator/pages/credit_card_form_view.dart' show CreditCardFormView;
+import 'package:flutter_application_credit_card_validator/widgets/credit_card_form_widget.dart' show CreditCardFormWidget;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +14,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
           ChangeNotifierProvider(create: (_) => SettingsViewModel()),
         ],
-        child: const MaterialApp(home: Scaffold(body: CreditCardFormView())),
+        child: const MaterialApp(home: Scaffold(body: CreditCardFormWidget())),
       ),
     );
 
@@ -33,7 +33,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
           ChangeNotifierProvider(create: (_) => SettingsViewModel()),
         ],
-        child: const MaterialApp(home: Scaffold(body: CreditCardFormView())),
+        child: const MaterialApp(home: Scaffold(body: CreditCardFormWidget())),
       ),
     );
 
@@ -53,7 +53,7 @@ void main() {
           ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
           ChangeNotifierProvider(create: (_) => SettingsViewModel()),
         ],
-        child: const MaterialApp(home: Scaffold(body: CreditCardFormView())),
+        child: const MaterialApp(home: Scaffold(body: CreditCardFormWidget())),
       ),
     );
 

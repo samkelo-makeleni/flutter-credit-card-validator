@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'credit_card_form_view.dart';
-import 'saved_cards_view.dart';
+import '../widgets/credit_card_form_widget.dart';
+import '../widgets/saved_cards_widget.dart';
 import 'settings_view.dart';
 
 class HomeView extends StatelessWidget {
@@ -25,9 +25,9 @@ class HomeView extends StatelessWidget {
         child: Column(
           children: [
             SizedBox(height: 120,),
-            CreditCardFormView(),
+            CreditCardFormWidget(),
             SizedBox(height: 12),
-            Expanded(child: SavedCardsView()),
+            Expanded(child: SavedCardsWidget()),
           ],
         ),
       ),
