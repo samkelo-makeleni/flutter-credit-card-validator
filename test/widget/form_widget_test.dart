@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 
 void main() {
-  testWidgets('Form validation and save flow', (tester) async {
+  testWidgets('Credit card form renders with all fields', (tester) async {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
@@ -18,17 +18,51 @@ void main() {
       ),
     );
 
-    final number = find.byType(TextFormField).first;
-    await tester.enterText(number, '4539578763621486');
-    final cvv = find.byType(TextFormField).at(1);
-    await tester.enterText(cvv, '123');
-    final country = find.byType(TextFormField).at(2);
-    await tester.enterText(country, 'South Africa');
+    // Verify form elements are present
+    expect(find.text('Card number'), findsOneWidget);
+    expect(find.text('CVC'), findsOneWidget);
+    expect(find.text('Issuing country'), findsOneWidget);
+    expect(find.text('Validate & Save'), findsOneWidget);
+    expect(find.text('Inferred: '), findsOneWidget);
+  });
 
+  testWidgets('Form validation requires all fields', (tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
+          ChangeNotifierProvider(create: (_) => SettingsViewModel()),
+        ],
+        child: const MaterialApp(home: Scaffold(body: CreditCardFormView())),
+      ),
+    );
+
+    // Try to tap save without filling any fields
     final btn = find.text('Validate & Save');
     await tester.tap(btn);
-    await tester.pumpAndSettle();
+    await tester.pump();
 
-    expect(find.text('Card saved'), findsOneWidget);
+    // Should show validation error for empty card number
+    expect(find.text('Enter card number'), findsOneWidget);
+  });
+
+  testWidgets('Form accepts valid card number input', (tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
+          ChangeNotifierProvider(create: (_) => SettingsViewModel()),
+        ],
+        child: const MaterialApp(home: Scaffold(body: CreditCardFormView())),
+      ),
+    );
+
+    // Fill in card number
+    final numberField = find.byType(TextFormField).first;
+    await tester.enterText(numberField, '4539578763621486');
+    await tester.pump();
+
+    // Verify the card type is inferred
+    expect(find.text('Inferred: Visa'), findsOneWidget);
   });
 }

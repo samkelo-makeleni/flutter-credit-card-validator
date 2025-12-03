@@ -1,6 +1,7 @@
 name: flutter_application_credit_card_validator
 description: "A new Flutter project."
 version: 1.0.0+1
+repository: https://github.com/samkelo-makeleni/flutter-credit-card-validator
 
 environment:
   sdk: ^3.9.2

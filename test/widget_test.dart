@@ -1,20 +1,22 @@
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_application_credit_card_validator/main.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_credit_card_validator/scoped_models/credit_card_viewmodel.dart';
+import 'package:flutter_application_credit_card_validator/scoped_models/settings_viewmodel.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-   
-    await tester.pumpWidget(const MyApp());
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('App smoke test - renders home view', (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => SettingsViewModel()),
+          ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
+        ],
+        child: const MyApp(),
+      ),
+    );
 
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-   
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('Credit Card Validator'), findsOneWidget);
+    expect(find.text('Validate & Save'), findsOneWidget);
   });
 }

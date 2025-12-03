@@ -1,15 +1,24 @@
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_application_credit_card_validator/main.dart' as app;
+import 'package:flutter_application_credit_card_validator/main.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_application_credit_card_validator/scoped_models/credit_card_viewmodel.dart';
+import 'package:flutter_application_credit_card_validator/scoped_models/settings_viewmodel.dart';
 
 void main() {
-  
-  WidgetsFlutterBinding.ensureInitialized();
+  testWidgets('App smoke test - full integration', (tester) async {
+    await tester.pumpWidget(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (_) => SettingsViewModel()),
+          ChangeNotifierProvider(create: (_) => CreditCardViewModel()),
+        ],
+        child: const MyApp(),
+      ),
+    );
 
-  testWidgets('App smoke test', (tester) async {
-    app.main();
     await tester.pumpAndSettle();
+
     expect(find.text('Credit Card Validator'), findsOneWidget);
+    expect(find.text('Validate & Save'), findsOneWidget);
   });
 }

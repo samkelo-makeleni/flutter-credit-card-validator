@@ -53,8 +53,9 @@ class CreditCardViewModel extends ChangeNotifier {
     final norm = normalize(card.number);
     if (banned
         .map((e) => e.toLowerCase())
-        .contains(card.issuingCountry.toLowerCase()))
+        .contains(card.issuingCountry.toLowerCase())) {
       return false;
+    }
     if (!luhnCheck(norm)) return false;
     if (_cards.any((c) => c.number == norm)) return false;
 

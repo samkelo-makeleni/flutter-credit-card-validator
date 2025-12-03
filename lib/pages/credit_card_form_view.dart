@@ -46,8 +46,10 @@ class _CreditCardFormViewState extends State<CreditCardFormView> {
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.camera_alt),
                     onPressed: () async {
+                      final messenger = ScaffoldMessenger.of(context);
                       try {
                         final details = await CardScanner.scanCard();
+                        if (!mounted) return;
                         if (details == null) return;
 
                         final scannedNumber = details.cardNumber;
@@ -55,16 +57,16 @@ class _CreditCardFormViewState extends State<CreditCardFormView> {
                           _number.text = scannedNumber;
                           cardVM.infer(scannedNumber);
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          messenger.showSnackBar(
                             const SnackBar(content: Text('No card number detected')),
                           );
                         }
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        if (!mounted) return;
+                        messenger.showSnackBar(
                           SnackBar(content: Text('Card scan failed: $e')),
                         );
                       }
-                    if (!mounted) return;
                     },
                   ),
                 ),
@@ -103,6 +105,7 @@ class _CreditCardFormViewState extends State<CreditCardFormView> {
               ElevatedButton(
                 onPressed: () async {
                   if (!_formKey.currentState!.validate()) return;
+                  final messenger = ScaffoldMessenger.of(context);
                   final success = await cardVM.addCard(
                     CreditCardModel(
                       number: _number.text,
@@ -117,8 +120,8 @@ class _CreditCardFormViewState extends State<CreditCardFormView> {
                   final msg = success
                       ? 'Card saved'
                       : 'Invalid / banned / duplicate';
-                  ScaffoldMessenger.of(context,
-                  ).showSnackBar(SnackBar(content: Text(msg)));
+                  messenger.showSnackBar(SnackBar(content: Text(msg)));
+                  if (!mounted) return;
                   if (success) {
                     _number.clear();
                     _cvv.clear();
