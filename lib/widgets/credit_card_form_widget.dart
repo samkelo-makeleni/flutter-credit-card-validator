@@ -32,6 +32,17 @@ class _CreditCardFormWidgetState extends State<CreditCardFormWidget> {
         .contains(country.toLowerCase());
   }
 
+  String? _validateCardNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Enter card number';
+    }
+    final digitsOnly = value.replaceAll(RegExp(r'[^0-9]'), '');
+    if (digitsOnly.length != 16) {
+      return 'Card number must be exactly 16 digits';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final cardVM = context.watch<CreditCardViewModel>();
@@ -81,8 +92,7 @@ class _CreditCardFormWidgetState extends State<CreditCardFormWidget> {
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: cardVM.infer,
-                validator: (v) =>
-                    (v == null || v.isEmpty) ? 'Enter card number' : null,
+                validator: _validateCardNumber,
               ),
               Row(
                 children: [
